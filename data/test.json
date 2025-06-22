@@ -1,0 +1,18 @@
+[
+  {
+    "title": "Test",
+    "url": "url",
+    "salary": {
+      "from": null,
+      "to": null,
+      "currency": null
+    },
+    "description": "Desc"
+  },
+  {
+    "title": "",
+    "url": "",
+    "salary": {},
+    "description": ""
+  }
+]
