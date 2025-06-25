@@ -1,16 +1,39 @@
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+from src.hh_api import HHAPI
+from src.json_saver_vacancy import JSONSaver
+from src.utils import filter_vacancies, sort_vacancies, get_top_vacancies, print_vacancies
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+def user_interaction():
+    hh_api = HHAPI()
+    storage = JSONSaver()
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    query = input("Введите поисковый запрос: ")
+    vacancies = hh_api.load_vacancies(query)
+
+    if not vacancies:
+        print("По вашему запросу вакансий не найдено.")
+        return
+
+    storage.save_vacancies(vacancies)
+    print(f"Найдено {len(vacancies)} вакансий")
+
+    try:
+        top_n = int(input("Введите количество вакансий для вывода в топ: "))
+        if top_n <= 0:
+            raise ValueError
+    except ValueError:
+        print("Ошибка: введите положительное число")
+        return
+
+    keyword = input("Введите ключевое слово для фильтрации (или Enter чтобы пропустить): ")
+    filtered = filter_vacancies(vacancies, keyword) if keyword else vacancies
+
+    sorted_vacancies = sort_vacancies(filtered)
+    top_vacancies = get_top_vacancies(sorted_vacancies, top_n)
+
+    print("\nРезультаты поиска:")
+    print_vacancies(top_vacancies)
+
+
+if __name__ == "__main__":
+    user_interaction()
