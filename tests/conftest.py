@@ -1,24 +1,29 @@
 import pytest
-from src.constructor import Vacancy
+
+from src.json_saver_vacancy import JSONSaver
+from src.vacancy import Vacancy
+
+
+@pytest.fixture
+def sample_vacancy():
+    return Vacancy(
+        name="Python Developer",
+        url="https://hh.ru/vacancy/123",
+        salary={"from": 100000, "to": 150000, "currency": "RUR"},
+        description="Разработка на Python",
+    )
 
 
 @pytest.fixture
 def sample_vacancies():
     return [
-        Vacancy("Python Dev", "http://example.com", {"from": 100000}, "Python 3+"),
-        Vacancy("Java Dev", "http://example.com", {"from": 90000}, "Java 11+"),
-        Vacancy("Intern", "http://example.com", None, "No exp needed"),
+        Vacancy("Python Developer", "url1", {"from": 100000}, "Python experience"),
+        Vacancy("Java Developer", "url2", {"from": 90000}, "Java experience"),
+        Vacancy("DevOps Engineer", "url3", {"from": 120000}, "Docker experience"),
     ]
 
 
 @pytest.fixture
-def sample_json_data():
-    return [
-        {
-            "name": "Test",
-            "salary": {"from": 50000, "currency": "RUB"},
-            "alternate_url": "http://test.com",
-            "snippet": {"requirement": "Python 3+"},
-            "description": "Test description",
-        }
-    ]
+def json_saver(tmp_path):
+    test_file = tmp_path / "test_vacancies.json"
+    return JSONSaver(str(test_file))
